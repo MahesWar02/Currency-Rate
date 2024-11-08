@@ -1,42 +1,39 @@
-// src/components/CurrencyTable.js
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import TableRow from "./TableRow"; // Import komponen TableRow untuk setiap baris data
+import TableRow from "./TableRow";
 
 const CurrencyTable = () => {
-  const [currencyData, setCurrencyData] = useState([]); // Menyimpan data kurs
+  const [currencyData, setCurrencyData] = useState([]);
 
-  // Fungsi untuk mengambil data kurs dari API
   const fetchCurrencyRates = async () => {
     try {
       const response = await axios.get(
         "https://api.currencyfreaks.com/latest",
         {
           params: {
-            apikey: "5b47642c38044fb189b142de20ebeba9", // API key untuk otorisasi
+            apikey: "5b47642c38044fb189b142de20ebeba9",
           },
         }
       );
 
-      const rates = response.data.rates; // Data kurs dari API
-      const currencies = ["CAD", "IDR", "JPY", "CHF", "EUR", "GBP"]; // Kurs yang ingin ditampilkan
+      const rates = response.data.rates;
+      const currencies = ["CAD", "IDR", "JPY", "CHF", "EUR", "GBP"];
       const formattedData = currencies.map((currency) => {
         const exchangeRate = parseFloat(rates[currency]);
         return {
           currency,
-          buy: (exchangeRate * 1.05).toFixed(4), // Kurs pembelian
-          exchangeRate: exchangeRate.toFixed(4), // Kurs tengah
-          sell: (exchangeRate * 0.95).toFixed(4), // Kurs penjualan
+          buy: (exchangeRate * 1.05).toFixed(4),
+          exchangeRate: exchangeRate.toFixed(4),
+          sell: (exchangeRate * 0.95).toFixed(4),
         };
       });
 
-      setCurrencyData(formattedData); // Memperbarui state dengan data yang diformat
+      setCurrencyData(formattedData);
     } catch (error) {
-      console.error("Gagal mengambil data kurs:", error); // Menangani error
+      console.error("Error get currency date:", error);
     }
   };
 
-  // Mengambil data ketika komponen pertama kali dimuat
   useEffect(() => {
     fetchCurrencyRates();
   }, []);
@@ -93,7 +90,6 @@ const CurrencyTable = () => {
         </tbody>
       </table>
 
-      {/* Informasi tambahan di bawah tabel */}
       <p style={{ textAlign: "center", marginTop: "30px", color: "white" }}>
         Rates are based from 1 USD
         <br />
